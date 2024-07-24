@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Registration</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#studentForm').on('submit', function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '{% url "register_student" %}',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Student registered successfully!');
+                            $('#studentForm')[0].reset();
+                        } else {
+                            var errors = response.errors;
+                            for (var field in errors) {
+                                alert(errors[field][0]);
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Student Registration</h1>
+    <form id="studentForm" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register</button>
+    </form>
+    
+</body>
+</html>
